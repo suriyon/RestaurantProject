@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -68,8 +69,10 @@ public class EmployeeServlet extends HttpServlet {
 				boolean result = dao.insert(employee);
 							
 				if(result){
+					List<Employee> employees = dao.selectAll();
 					RequestDispatcher rd = request.getRequestDispatcher("main.jsp");
 					request.setAttribute("message", "เพิ่มข้อมูลพนักงานสำเร็จ");
+					request.setAttribute("employees", employees);
 					rd.forward(request, response);
 				}else{
 					RequestDispatcher rd = request.getRequestDispatcher("insert.jsp");
@@ -85,6 +88,12 @@ public class EmployeeServlet extends HttpServlet {
 			
 			
 			
+		}else if(action.equals("selectall")){
+			EmployeeDAO dao = new  EmployeeDAO();
+			List<Employee> employees = dao.selectAll();
+			RequestDispatcher rd = request.getRequestDispatcher("main.jsp");			
+			request.setAttribute("employees", employees);
+			rd.forward(request, response);
 		}
 	}
 

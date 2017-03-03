@@ -3,6 +3,8 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Employee;
 import util.MySQLHelper;
@@ -55,5 +57,29 @@ public class EmployeeDAO {
 			e.printStackTrace();
 		}
 		return result;		
+	}
+	public List<Employee> selectAll(){
+		List<Employee> employees = new ArrayList<>();
+		String sql = "select * from employee";
+		try {
+			PreparedStatement ps = MySQLHelper.openDB().prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				String id = rs.getString(1);
+				String name = rs.getString(2);
+				int position = rs.getInt(3);
+				int salary = rs.getInt(4);
+				
+				Employee employee = new Employee(id, name, position, salary);
+				
+				employees.add(employee);
+			}
+			rs.close();
+			ps.close();
+			MySQLHelper.cloesDB();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return employees;
 	}
 }
